@@ -22,11 +22,11 @@ class BaseAgent(ABC):
     
     
 class DummyAgent(BaseAgent):
-    def __init__(self, active_connections=[]):
+    def __init__(self, event_queue):
         self.messages = []
         self.cnt = 0
         self.planning_task = None
-        self.has_new_messages = False  # 新增標記，標示是否有新訊息
+        self.event_queue = event_queue
         
     def reset_messages(self):
         self.cnt = 0
@@ -34,11 +34,9 @@ class DummyAgent(BaseAgent):
         # 取消任何正在進行的計劃任務
         if self.planning_task and not self.planning_task.done():
             self.planning_task.cancel()
-        self.has_new_messages = False
         return self.messages
 
     async def response(self, message: schemas.MessageCreate):
-        self.has_new_messages = False
         self.cnt += 1
         # 將使用者訊息加入對話歷史
         user_message = schemas.MessageContent(
@@ -72,16 +70,20 @@ class DummyAgent(BaseAgent):
             role="assistant"
         )
         self.messages.append(plan_message)
-        self.has_new_messages = True
+        
+        # 發送事件通知
+        await self.event_queue.put({
+            "data": json.dumps({
+                "type": "plan_completed",
+                "timestamp": time.time()
+            })
+        })
+        
+        print("計劃任務執行完畢")
 
     
     def get_messages(self):
         # 重置新訊息標記
-        self.has_new_messages = False
         return self.messages
-    
-    def has_updates(self):
-        """檢查是否有新的訊息需要更新"""
-        return self.has_new_messages
 
 

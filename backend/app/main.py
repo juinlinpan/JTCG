@@ -1,5 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from sse_starlette.sse import EventSourceResponse
 from typing import List
 import asyncio
 import schemas
@@ -19,9 +20,31 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-advisor = DummyAgent()
+# 建立事件隊列
+event_queue = asyncio.Queue()
 
+@app.get("/events")
+async def events(request: Request):
+    async def event_generator():
+        try:
+            while True:
+                if await request.is_disconnected():
+                    break
+                
+                # 等待事件，但設置超時以檢查連接狀態
+                try:
+                    event = await asyncio.wait_for(event_queue.get(), timeout=1.0)
+                    yield event
+                except asyncio.TimeoutError:
+                    continue
+                    
+        except asyncio.CancelledError:
+            pass
+    
+    return EventSourceResponse(event_generator())
 
+# 將事件隊列傳遞給 advisor
+advisor = DummyAgent(event_queue)
 
 @app.get("/messages/reset")
 def reset_messages():

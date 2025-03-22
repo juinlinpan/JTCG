@@ -12,3 +12,4 @@ langchain-openai
 langchain-community
 langgraph
 langchain-google-genai
+sse-starlette>=1.6.5

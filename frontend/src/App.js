@@ -18,6 +18,31 @@ function App() {
     scrollToBottom();
   }, [messages]);
 
+  useEffect(() => {
+    // 建立 SSE 連接
+    const eventSource = new EventSource(
+      process.env.NODE_ENV === 'production' 
+        ? '/api/events' 
+        : 'http://localhost:8000/events'
+    );
+
+    eventSource.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.type === 'plan_completed') {
+        fetchMessages(); // 重新載入訊息
+      }
+    };
+
+    eventSource.onerror = (error) => {
+      console.error('SSE 錯誤:', error);
+      eventSource.close();
+    };
+
+    return () => {
+      eventSource.close();
+    };
+  }, []);
+
   const fetchMessages = async () => {
     try {
       const response = await api.getMessages();
