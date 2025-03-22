@@ -1,8 +1,11 @@
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from typing import List
+import asyncio
 import schemas
 from agents.base import DummyAgent
 import uvicorn
+import time
 
 
 app = FastAPI(title="Travel Advisor API")
@@ -16,38 +19,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-class TravelAdvisorAPI:
-    def __init__(self):
-        self.messages = []
-        self.agent = DummyAgent()
+advisor = DummyAgent()
 
-    def reset_messages(self):
-        self.messages = []
 
-    def add_message(self, message: schemas.MessageCreate):
-        self.messages.append(message)
-        
-        ## dummy ai response
-        ai_response_str = "This is a dummy response."
-        ai_message = schemas.MessageContent(
-            content=ai_response_str,
-            role="assistant"
-        )
-        return ai_message
-    
-    def get_messages(self):
-        return self.messages
-
-advisor = TravelAdvisorAPI()
 
 @app.get("/messages/reset")
 def reset_messages():
     return advisor.reset_messages()
 
 @app.post("/messages", response_model=schemas.MessageContent)
-def add_message(message: schemas.MessageCreate):
-    return advisor.add_message(message)
-
+async def add_message(message: schemas.MessageCreate):
+    # 改為非同步呼叫
+    return await advisor.response(message)
+    
 @app.get("/messages/get_messages", response_model=list[schemas.MessageContent])
 def get_messages():
     return advisor.get_messages()
