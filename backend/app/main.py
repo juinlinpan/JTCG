@@ -5,6 +5,7 @@ from typing import List
 import asyncio
 import schemas
 from agents.base import DummyAgent
+from agents.v1 import V1Agent
 import uvicorn
 import time
 
@@ -44,7 +45,7 @@ async def events(request: Request):
     return EventSourceResponse(event_generator())
 
 # 將事件隊列傳遞給 advisor
-advisor = DummyAgent(event_queue)
+advisor = V1Agent(event_queue)
 
 @app.get("/messages/reset")
 def reset_messages():
