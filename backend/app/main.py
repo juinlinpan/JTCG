@@ -50,10 +50,10 @@ advisor = DummyAgent(event_queue)
 def reset_messages():
     return advisor.reset_messages()
 
-@app.post("/messages", response_model=schemas.MessageContent)
+@app.post("/messages")
 async def add_message(message: schemas.MessageCreate):
-    # 改為非同步呼叫
-    return await advisor.response(message)
+    asyncio.create_task(advisor.response(message))
+    return {"message": "Message received."}
     
 @app.get("/messages/get_messages", response_model=list[schemas.MessageContent])
 def get_messages():

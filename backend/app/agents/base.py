@@ -44,11 +44,12 @@ class DummyAgent(BaseAgent):
             role="user"
         )
         self.messages.append(user_message)
-        
+        await asyncio.sleep(5)
         if self.cnt % 3 != 0: 
             ret = "This is a dummy response."
         else:
             ret = "OK, 我幫您安排行程"
+            
             # 建立非同步任務但不等待它完成
             self.planning_task = asyncio.create_task(self.plan())
             
@@ -59,8 +60,13 @@ class DummyAgent(BaseAgent):
         )
         self.messages.append(ai_message)
         
-        return ai_message
-        
+        await self.event_queue.put({
+            "data": json.dumps({
+                "type": "plan_completed",
+                "timestamp": time.time()
+            })
+        })
+
     async def plan(self, **kwargs):
         # 此方法模擬背景計算過程
         print("開始執行計劃任務...")

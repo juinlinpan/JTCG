@@ -30,6 +30,7 @@ function App() {
       const data = JSON.parse(event.data);
       if (data.type === 'plan_completed') {
         fetchMessages(); // 重新載入訊息
+        setLoading(false);
       }
     };
 
@@ -64,20 +65,12 @@ function App() {
       content: input,
       role: 'user'
     };
+    
+    api.sendMessage(userMessage);
 
     setMessages([...messages, userMessage]);
     setInput('');
     setLoading(true);
-
-    try {
-      const response = await api.sendMessage(userMessage);
-      setMessages(prevMessages => [...prevMessages, response.data]);
-    } catch (error) {
-      console.error('發送消息失敗:', error);
-      alert('發送消息時發生錯誤，請稍後再試。');
-    } finally {
-      setLoading(false);
-    }
   };
 
   const handleReset = async () => {
