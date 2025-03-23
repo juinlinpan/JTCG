@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import './App.css';
 import api from './services/api';
 
@@ -99,7 +101,15 @@ function App() {
                 key={index}
                 className={`message ${message.role === 'user' ? 'user-message' : 'assistant-message'}`}
               >
-                <div className="message-content">{message.content}</div>
+                {message.role === 'user' ? (
+                  <div className="message-content">{message.content}</div>
+                ) : (
+                  <div className="message-content markdown-content">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {message.content}
+                    </ReactMarkdown>
+                  </div>
+                )}
               </div>
             ))
           )}
