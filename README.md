@@ -57,6 +57,9 @@ docker-compose up --build
 - `GET /events` - Server-Sent Events (SSE) 端點，用於即時訊息推送
 
 
+## 介面截圖
+![alt text](images/image.png)
+![alt text](images/image.png)
 ## TBD
 
 ### short term
