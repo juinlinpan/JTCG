@@ -12,13 +12,17 @@ from langchain_core.messages import (
 )
 
 from pydantic import BaseModel, Field
-
+from typing import Any, List, TypedDict
 from langchain_core.tools import tool
 from langchain_core.prompts import (
     ChatPromptTemplate,
     SystemMessagePromptTemplate,
     HumanMessagePromptTemplate
 )   
+from tools import tool_box
+from langgraph.prebuilt import ToolNode
+from langgraph.graph import END, START, StateGraph
+
 
 os.environ['GOOGLE_API_KEY'] = 'AIzaSyC8lJWeRoheKe6QBReAfRbhiried6EqChc'
 
@@ -69,6 +73,12 @@ SYS_PLANNER = """
 
 HUMAN_PLANNER = "需求: {requirement}"
 
+class Graph_State(TypedDict):
+    messages: List
+    result: str
+    notebook: str
+    question: str
+    searcher_messages: List
 
 class V1Agent():
     def __init__(self, event_queue):
@@ -167,3 +177,45 @@ class V1Agent():
         })
         
         print("計劃任務執行完畢")
+        
+    
+    def coordinator(self, graph_state: Graph_State):
+        return graph_state
+    def searcher(self, graph_state: Graph_State):
+        return graph_state
+    
+    def continue_searching(self, graph_state: Graph_State):
+        if graph_state['result'] == "":
+            return "searcher"
+        else:
+            return END
+        
+    def go_tool(self, graph_state: Graph_State):
+        if graph_state['searcher_messages'][-1].tool_calls:
+            return "tool"
+        else:
+            return "coordinator"
+        
+    
+    async def plan_v1_2(self, requirement: str):
+        
+        graph_state = Graph_State(
+            messages=[],
+            result="",
+            notebook=""
+        )
+        
+        workflow = StateGraph(graph_state)
+        
+        workflow.add_node("coordinator", self.coordinator)
+        workflow.add_node("searcher", self.searcher)
+        tool_node = ToolNode(tool_box)
+        workflow.add_node("tool", tool_node)
+        
+        workflow.add_edge(START, "coordinator")
+        workflow.add_conditional_edges("coordinator", self.continue_searching, ["searcher", END])
+        workflow.add_conditional_edges("searcher", self.go_tool, ["tool", "coordinator"])
+        workflow.add_edge("tool", "coordinator")
+        
+        app = workflow.compile()
+        

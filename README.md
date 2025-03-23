@@ -54,12 +54,20 @@ docker-compose up --build
 - `GET /messages/reset` - 重置對話
 - `POST /messages` - 發送新訊息
 - `GET /messages/get_messages` - 獲取對話歷史
+- `GET /events` - Server-Sent Events (SSE) 端點，用於即時訊息推送
+
+## 特色功能
+
+- 即時對話：使用 SSE (Server-Sent Events) 實現即時訊息推送
+- AI 驅動：使用先進的 AI 模型提供旅遊建議
+- 對話記憶：保持上下文理解，提供連貫的對話體驗
 
 ## 開發注意事項
 
 - 後端服務運行在 9527 端口
 - 前端服務運行在 3000 端口
 - 使用 Docker 網絡 "jtcg-network" 進行服務間通信
+- SSE 連接需要保持長連接支持
 
 ## 授權
 
