@@ -1,6 +1,6 @@
-# JTCG (Japanese Travel Chat Guide)
+# JTCG project
 
-一個基於 AI 的日本旅遊諮詢聊天機器人系統。
+一個基於 AI 的台灣旅遊諮詢聊天機器人系統。
 
 ## 專案架構
 
@@ -11,26 +11,26 @@
 │       ├── agents/         # AI 代理邏輯
 │       ├── main.py        # FastAPI 後端服務
 │       ├── schemas.py     # 資料模型定義
+│       ├── requirements.txt # python套件們
 │       └── Dockerfile     # 後端容器設定
 ├── frontend/
 │   ├── src/              # React 前端程式碼
 │   ├── package.json      # 前端依賴配置
 │   └── Dockerfile        # 前端容器設定
-└── docker-compose.yml    # 容器編排配置
+└── docker-compose.yml    # 容器編排配置，裡面會啟動前端、後端(還沒db, ollama)
 ```
 
 ## 技術棧
-
+- LLM / prompt management: Langchain, Langgraph 
 - 後端：Python + FastAPI
-- 前端：React + TypeScript
-- 容器化：Docker + Docker Compose
+- 前端：React
+- 環境管理 / 安裝：Docker
 
 ## 開始使用
 
 ### 前置需求
 
 - Docker
-- Docker Compose
 
 ### 安裝與執行
 
@@ -54,7 +54,7 @@ docker-compose up --build
 - `GET /messages/reset` - 重置對話
 - `POST /messages` - 發送新訊息
 - `GET /messages/get_messages` - 獲取對話歷史
-- `GET /events` - Server-Sent Events (SSE) 端點，用於即時訊息推送
+- `GET /events` - Server-Sent Events (SSE) 端點，用於推送後端LLM運算完成的事件，好讓前端收到後更新畫面
 
 
 ## 介面截圖
