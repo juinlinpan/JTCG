@@ -56,19 +56,28 @@ docker-compose up --build
 - `GET /messages/get_messages` - 獲取對話歷史
 - `GET /events` - Server-Sent Events (SSE) 端點，用於即時訊息推送
 
-## 特色功能
 
-- 即時對話：使用 SSE (Server-Sent Events) 實現即時訊息推送
-- AI 驅動：使用先進的 AI 模型提供旅遊建議
-- 對話記憶：保持上下文理解，提供連貫的對話體驗
+## TBD
 
-## 開發注意事項
+### short term
+1. tool的東西太多
+    - 有些要先轉json整理完再變成str
+    - 有些要省去一些args
 
-- 後端服務運行在 9527 端口
-- 前端服務運行在 3000 端口
-- 使用 Docker 網絡 "jtcg-network" 進行服務間通信
-- SSE 連接需要保持長連接支持
+2. 3個node的prompt
+    - coordinator: 讀取notebook對searcher發問
+    - searcher: 用searcher_messages 對tools 做搜尋，得到答案並統整給coordinator
+    - tools: 用來做搜尋的工具(不用prompt)
+    - checker: 用來檢查coordinator的答案是否正確
 
-## 授權
+3. 語言要注意，可能要想辦法阻止俄文、韓文
+4. SSE的連線好像怪怪的，有時候開始搜尋的時候前端很久才收到server event
 
-[授權說明]
+### long term
+1. 把第一層response也串上langgraph, 這樣如果使用者不滿意或想要微調，設計比較方便。
+    - SSE是否可以摸得進去?? 
+
+2. message 用db存比較穩
+    - crud 的設計，盡量不要跟schemas差太多
+    - curd - schemas - langchain messages 三者轉換
+
