@@ -24,7 +24,7 @@ from langgraph.prebuilt import ToolNode
 from langgraph.graph import END, START, StateGraph
 
 
-os.environ['GOOGLE_API_KEY'] = 'AIzaSyC8lJWeRoheKe6QBReAfRbhiried6EqChc'
+os.environ['GOOGLE_API_KEY'] = '...'
 
 
 SYS_RESP = """

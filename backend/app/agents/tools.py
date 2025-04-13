@@ -2,6 +2,8 @@ from langchain_core.tools import tool
 import requests
 from pydantic import BaseModel, Field
 
+TOKEN = "..."
+
 @tool
 def Get_Hotel_Room_Vacancies(
     hotel_group_types: str,
@@ -47,7 +49,7 @@ def Get_Hotel_Room_Vacancies(
     
     headers = {
         "accept": "application/json",
-        "Authorization": "DhDkXZkGXaYBZhkk1Z9m9BuZDJGy"
+        "Authorization": "..."
     }
 
     response = requests.get(url, headers=headers)
@@ -71,7 +73,7 @@ def Get_Plans():
 
     headers = {
         "accept": "application/json",
-        "Authorization": "DhDkXZkGXaYBZhkk1Z9m9BuZDJGy"
+        "Authorization": "..."
     }
 
     response = requests.get(url, headers=headers)
@@ -92,7 +94,7 @@ def Get_Hotel_Details():
 
     headers = {
         "accept": "application/json",
-        "Authorization": "DhDkXZkGXaYBZhkk1Z9m9BuZDJGy"
+        "Authorization": "..."
     }
 
     response = requests.get(url, headers=headers)
@@ -114,7 +116,7 @@ def Guess_Hotel():
 
     headers = {
         "accept": "application/json",
-        "Authorization": "DhDkXZkGXaYBZhkk1Z9m9BuZDJGy"
+        "Authorization": "..."
     }
 
     response = requests.get(url, headers=headers)
@@ -135,7 +137,7 @@ def Get_Hotels():
 
     headers = {
         "accept": "application/json",
-        "Authorization": "DhDkXZkGXaYBZhkk1Z9m9BuZDJGy"
+        "Authorization": "..."
     }
 
     response = requests.get(url, headers=headers)
@@ -156,7 +158,7 @@ def Get_Hotel_Room_Types():
 
     headers = {
         "accept": "application/json",
-        "Authorization": "DhDkXZkGXaYBZhkk1Z9m9BuZDJGy"
+        "Authorization": "..."
     }
 
     response = requests.get(url, headers=headers)
@@ -176,7 +178,7 @@ def Get_Hotel_Room_Type_Facilities():
 
     headers = {
         "accept": "application/json",
-        "Authorization": "DhDkXZkGXaYBZhkk1Z9m9BuZDJGy"
+        "Authorization": "..."
     }
 
     response = requests.get(url, headers=headers)
@@ -196,7 +198,7 @@ def Get_Hotel_Facilities():
 
     headers = {
         "accept": "application/json",
-        "Authorization": "DhDkXZkGXaYBZhkk1Z9m9BuZDJGy"
+        "Authorization": "..."
     }
 
     response = requests.get(url, headers=headers)
@@ -216,7 +218,7 @@ def Get_Hotel_Group_Types():
 
     headers = {
         "accept": "application/json",
-        "Authorization": "DhDkXZkGXaYBZhkk1Z9m9BuZDJGy"
+        "Authorization": "..."
     }
 
     response = requests.get(url, headers=headers)
@@ -237,7 +239,7 @@ def Get_Districts():
 
     headers = {
         "accept": "application/json",
-        "Authorization": "DhDkXZkGXaYBZhkk1Z9m9BuZDJGy"
+        "Authorization": "..."
     }
 
     response = requests.get(url, headers=headers)
@@ -258,7 +260,7 @@ def Get_Counties():
 
     headers = {
         "accept": "application/json",
-        "Authorization": "DhDkXZkGXaYBZhkk1Z9m9BuZDJGy"
+        "Authorization": "..."
     }
 
     response = requests.get(url, headers=headers)
